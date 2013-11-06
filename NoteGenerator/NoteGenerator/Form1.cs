@@ -42,24 +42,23 @@ namespace NoteGenerator
 
                 NAudio.Wave.WaveStream pcm = new NAudio.Wave.WaveChannel32(new NAudio.Wave.WaveFileReader(dialog.FileName));
                 stream = new NAudio.Wave.BlockAlignReductionStream(pcm);
-
-                //byte[] buffer = new byte[16384];
-                //int read = 0;
-                //while (pcm.Position < pcm.Length)
-                //    {
-                //    read = pcm.Read(buffer, 0, 16384);
-                //    for (int i = 0; i < read / 4; i++)
-                //        {
-                //        chart1.Series["wave"].Points.Add(BitConverter.ToSingle(buffer, i * 4));
-                //        }
-
-                //    }
+              
+                byte[] buffer = new byte[16384];
+                int read = 0;
+                while (pcm.Position < pcm.Length)
+                    {
+                    read = pcm.Read(buffer, 0, 16384);
+                    for (int i = 0; i < read / 4; i++)
+                        {
+                        chart1.Series["wave"].Points.Add(BitConverter.ToSingle(buffer, i * 4));
+                        }
+                    }
                 }
             else throw new InvalidOperationException("Zly typ pliku");
+
             output = new NAudio.Wave.DirectSoundOut();
             output.Init(stream);
             output.Play();
-
             ppBtn.Enabled = true;
             }
 
@@ -135,7 +134,7 @@ namespace NoteGenerator
             NAudio.Wave.WaveInProvider waveIn = new NAudio.Wave.WaveInProvider(sourceStream);
             waveOut = new NAudio.Wave.DirectSoundOut();
             waveOut.Init(waveIn);
-            sampleAggregator = new SampleAggregator();
+            //sampleAggregator = new SampleAggregator();
             sourceStream.StartRecording();
             }
 
@@ -155,23 +154,7 @@ namespace NoteGenerator
                 }
             }
 
-        public event EventHandler<FftEventArgs> FftCalculated;
-
-        protected virtual void OnFftCalculated(FftEventArgs e)
-            {
-            EventHandler<FftEventArgs> handler = FftCalculated;
-            if (handler != null) handler(this, e);
-            }
-
-        public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
-
-        protected virtual void OnMaximumCalculated(MaxSampleEventArgs e)
-            {
-            EventHandler<MaxSampleEventArgs> handler = MaximumCalculated;
-            if (handler != null) handler(this, e);
-            }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void recordAudioFile(object sender, EventArgs e)
             {
             if (listBox1.SelectedItems.Count == 0) return;
 
@@ -186,25 +169,9 @@ namespace NoteGenerator
 
             sourceStream.DataAvailable += new EventHandler<NAudio.Wave.WaveInEventArgs>(sourcestream_DataAvailable);
             waveWriter = new NAudio.Wave.WaveFileWriter(save.FileName, sourceStream.WaveFormat);
-            sampleAggregator = new SampleAggregator();
-            sampleAggregator.NotificationCount = sourceStream.WaveFormat.SampleRate / 100;
-            sampleAggregator.PerformFFT = true;
-            sampleAggregator.FftCalculated += (s, a) => OnFftCalculated(a);
-            sampleAggregator.MaximumCalculated += (s, a) => OnMaximumCalculated(a);
-           
+
             sourceStream.StartRecording();
             }
-
-        private object OnMaximumCalculated(MaxSampleEventArgs a)
-            {
-            throw new NotImplementedException();
-            }
-
-        private object OnFftCalculated(FftEventArgs a)
-            {
-            throw new NotImplementedException();
-            }
-
 
         private void sourcestream_DataAvailable(object sender, NAudio.Wave.WaveInEventArgs e)
             {
