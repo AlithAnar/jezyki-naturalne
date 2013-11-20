@@ -6,8 +6,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace NoteGenerator 
     {
@@ -42,7 +44,14 @@ namespace NoteGenerator
 
                 NAudio.Wave.WaveStream pcm = new NAudio.Wave.WaveChannel32(new NAudio.Wave.WaveFileReader(dialog.FileName));
                 stream = new NAudio.Wave.BlockAlignReductionStream(pcm);
-              
+
+                output = new NAudio.Wave.DirectSoundOut();
+                output.Init(stream);
+                output.Play();
+
+                //Thread.Sleep(stream.TotalTime);
+
+
                 byte[] buffer = new byte[16384];
                 int read = 0;
                 while (pcm.Position < pcm.Length)
@@ -53,12 +62,11 @@ namespace NoteGenerator
                         chart1.Series["wave"].Points.Add(BitConverter.ToSingle(buffer, i * 4));
                         }
                     }
+                
                 }
             else throw new InvalidOperationException("Zly typ pliku");
 
-            output = new NAudio.Wave.DirectSoundOut();
-            output.Init(stream);
-            output.Play();
+            
             ppBtn.Enabled = true;
             }
 
@@ -119,7 +127,7 @@ namespace NoteGenerator
         private NAudio.Wave.WaveIn sourceStream = null;
         private NAudio.Wave.DirectSoundOut waveOut = null;
         private NAudio.Wave.WaveFileWriter waveWriter = null;
-        private SampleAggregator sampleAggregator = null;
+
         private void recordBtn_Click(object sender, EventArgs e)
             {
             if (listBox1.SelectedItems.Count == 0) return;
@@ -129,16 +137,19 @@ namespace NoteGenerator
             sourceStream = new NAudio.Wave.WaveIn();
             sourceStream.DeviceNumber = deviceNumber;
             sourceStream.DataAvailable += sourcestream_DataAvailable;
-            sourceStream.RecordingStopped += new EventHandler<NAudio.Wave.StoppedEventArgs>(sourveStream_recordingStopped);
+            // sourceStream.RecordingStopped += new EventHandler<NAudio.Wave.StoppedEventArgs>(sourveStream_recordingStopped);
             sourceStream.WaveFormat = new NAudio.Wave.WaveFormat(44100, NAudio.Wave.WaveIn.GetCapabilities(deviceNumber).Channels);
             NAudio.Wave.WaveInProvider waveIn = new NAudio.Wave.WaveInProvider(sourceStream);
             waveOut = new NAudio.Wave.DirectSoundOut();
             waveOut.Init(waveIn);
             //sampleAggregator = new SampleAggregator();
             sourceStream.StartRecording();
+            waveOut.Play();
+
+
             }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void flushAll(object sender, EventArgs e)
             {
             if (waveOut != null)
                 {
@@ -169,7 +180,6 @@ namespace NoteGenerator
 
             sourceStream.DataAvailable += new EventHandler<NAudio.Wave.WaveInEventArgs>(sourcestream_DataAvailable);
             waveWriter = new NAudio.Wave.WaveFileWriter(save.FileName, sourceStream.WaveFormat);
-
             sourceStream.StartRecording();
             }
 
@@ -180,13 +190,12 @@ namespace NoteGenerator
             byte[] buffer = e.Buffer;
             int bytesRecorded = e.BytesRecorded;
             waveWriter.WriteData(e.Buffer, 0, e.BytesRecorded);
-
             for (int index = 0; index < e.BytesRecorded; index += 2)
                 {
                 short sample = (short)((buffer[index + 1] << 8) |
                                         buffer[index + 0]);
                 float sample32 = sample / 32768f;
-                sampleAggregator.Add(sample32);
+                
                 }
             waveWriter.Flush();
             }
