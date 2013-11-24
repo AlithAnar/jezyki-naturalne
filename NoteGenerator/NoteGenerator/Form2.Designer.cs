@@ -28,12 +28,13 @@
         /// </summary>
         private void InitializeComponent()
             {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.listDevices = new System.Windows.Forms.ListBox();
             this.freqLabel = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.noteView = new NoteGenerator.MusicNoteWriter();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -68,7 +69,7 @@
             // freqLabel
             // 
             this.freqLabel.AutoSize = true;
-            this.freqLabel.Location = new System.Drawing.Point(407, 168);
+            this.freqLabel.Location = new System.Drawing.Point(297, 78);
             this.freqLabel.Name = "freqLabel";
             this.freqLabel.Size = new System.Drawing.Size(42, 13);
             this.freqLabel.TabIndex = 3;
@@ -76,27 +77,34 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(13, 224);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(481, 194);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "chart1";
             // 
+            // noteView
+            // 
+            this.noteView.Location = new System.Drawing.Point(509, 2);
+            this.noteView.Name = "noteView";
+            this.noteView.Size = new System.Drawing.Size(549, 522);
+            this.noteView.TabIndex = 5;
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 462);
+            this.ClientSize = new System.Drawing.Size(1098, 533);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.freqLabel);
             this.Controls.Add(this.listDevices);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.noteView);
             this.Name = "Form2";
             this.Text = "Form2";
-            //fgdfg
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -110,5 +118,6 @@
         private System.Windows.Forms.ListBox listDevices;
         private System.Windows.Forms.Label freqLabel;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private MusicNoteWriter noteView;
         }
     }

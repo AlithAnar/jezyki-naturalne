@@ -72,6 +72,8 @@ namespace NoteGenerator
             else
                 {
                 freqLabel.Text = "FREQ: " + e.Frequency;
+                noteView.AddNote(e.Frequency);
+                noteView.Refresh();
                 addDataPoint(e);
                 
                 }

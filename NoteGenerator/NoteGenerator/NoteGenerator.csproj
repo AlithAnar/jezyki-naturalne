@@ -64,6 +64,12 @@
     <Compile Include="ComplexNumber.cs" />
     <Compile Include="FrequencyUtils.cs" />
     <Compile Include="FftAlgorithm.cs" />
+    <Compile Include="MusicNoteWriter.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MusicNoteWriter.Designer.cs">
+      <DependentUpon>MusicNoteWriter.cs</DependentUpon>
+    </Compile>
     <Compile Include="SoundCaptureBase.cs" />
     <Compile Include="FrequencyInfoSource.cs" />
     <Compile Include="Form1.cs">
@@ -110,6 +116,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\G-clef.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\1-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\#.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
