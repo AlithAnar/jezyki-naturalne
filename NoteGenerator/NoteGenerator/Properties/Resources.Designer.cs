@@ -73,6 +73,16 @@ namespace NoteGenerator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap F_clef {
+            get {
+                object obj = ResourceManager.GetObject("F_clef", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap G_clef {
             get {
                 object obj = ResourceManager.GetObject("G_clef", resourceCulture);
