@@ -9,23 +9,7 @@ using System.Windows.Forms;
 
 namespace NoteGenerator
 {
-    public class noteFrequencyAndPosition
-    {
-        public double startFrequency;
-        public double endFrequency;
-        public int position;
-        public bool increase;
-        public string clef;
-
-        public noteFrequencyAndPosition(double startFrequency, double endFrequency, int position, bool increase, string clef)
-        {
-            this.startFrequency = startFrequency;
-            this.endFrequency = endFrequency;
-            this.position = position;
-            this.increase = increase;
-            this.clef = clef;
-        }
-    }
+    
 
     public partial class MusicNoteWriter : Control
     {
@@ -132,6 +116,8 @@ namespace NoteGenerator
                 if (40 + startX * 30 > this.Width - 10)
                 {
                     startY += 150;
+                    if(startY + 139 > this.Height)
+                        this.Height += 150;
                     startX = 0;
                     newo.DrawLine(blackPen, new Point(0, startY + 24), new Point(this.Width, startY + 24));
                     newo.DrawLine(blackPen, new Point(0, startY + 34), new Point(this.Width, startY + 34));
@@ -182,6 +168,25 @@ namespace NoteGenerator
             }
 
             base.OnPaint(pe);
+        }
+    }
+
+
+    public class noteFrequencyAndPosition
+    {
+        public double startFrequency;
+        public double endFrequency;
+        public int position;
+        public bool increase;
+        public string clef;
+
+        public noteFrequencyAndPosition(double startFrequency, double endFrequency, int position, bool increase, string clef)
+        {
+            this.startFrequency = startFrequency;
+            this.endFrequency = endFrequency;
+            this.position = position;
+            this.increase = increase;
+            this.clef = clef;
         }
     }
 }

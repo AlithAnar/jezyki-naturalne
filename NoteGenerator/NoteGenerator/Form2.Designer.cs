@@ -89,14 +89,15 @@
             // 
             this.noteView.Location = new System.Drawing.Point(509, 2);
             this.noteView.Name = "noteView";
-            this.noteView.Size = new System.Drawing.Size(740, 743);
+            this.noteView.Size = new System.Drawing.Size(740, 155);
             this.noteView.TabIndex = 5;
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1261, 757);
+            this.AutoScroll = true;
+            this.ClientSize = new System.Drawing.Size(1271, 522);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.freqLabel);
             this.Controls.Add(this.listDevices);
