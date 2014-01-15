@@ -71,11 +71,13 @@ namespace NoteGenerator
                 }
             else
                 {
-                freqLabel.Text = "FREQ: " + e.Frequency;
-                noteView.AddNote(e.Frequency);
-                noteView.Refresh();
-                addDataPoint(e);
-                
+                    if (e.Frequency != 0)
+                    {
+                        freqLabel.Text = "FREQ: " + e.Frequency;            
+                        noteView.AddNote(e.Frequency);
+                        noteView.Refresh();
+                        addDataPoint(e);
+                    }
                 }
             }
 

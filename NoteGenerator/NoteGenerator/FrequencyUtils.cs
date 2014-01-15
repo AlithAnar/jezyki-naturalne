@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 
 namespace NoteGenerator
-    {
+{
     /// <summary>
     /// Utils that helps to detect the fundumental frequency.
     /// </summary> 
     static class FrequencyUtils
-        {
+    {
         /// <summary>
         /// Finds fundamental frequency: calculates spectrogram, finds peaks, analyzes
         /// and refines frequency by diff sample values.
@@ -20,7 +20,19 @@ namespace NoteGenerator
         /// <param name="maxFreq">The max useful frequency</param>
         /// <returns>Found frequency, 0 - otherwise</returns>
         internal static double FindFundamentalFrequency(double[] x, int sampleRate, double minFreq, double maxFreq)
+        {
+            int amplitudeCount = 0;
+            double amplitude = 0;
+            foreach (double amp in x)
             {
+                if (amp >= 0)
+                {
+                    amplitude += amp;
+                    amplitudeCount++;
+                }
+            }
+            Console.Write(amplitude / amplitudeCount);
+
             double[] spectr = FftAlgorithm.Calculate(x);
 
             int usefullMinSpectr = Math.Max(0,
@@ -35,11 +47,11 @@ namespace NoteGenerator
                 PeaksCount);
 
             if (Array.IndexOf(peakIndices, usefullMinSpectr) >= 0)
-                {
+            {
                 // lowest usefull frequency bin shows active
                 // looks like is no detectable sound, return 0
                 return 0;
-                }
+            }
 
             // select fragment to check peak values: data offset
             const int verifyFragmentOffset = 0;
@@ -51,7 +63,7 @@ namespace NoteGenerator
             int minPeakIndex = 0;
             int minOptimalInterval = 0;
             for (int i = 0; i < peakIndices.Length; i++)
-                {
+            {
                 int index = peakIndices[i];
                 int binIntervalStart = spectr.Length / (index + 1), binIntervalEnd = spectr.Length / index;
                 int interval;
@@ -61,19 +73,20 @@ namespace NoteGenerator
                     binIntervalStart, binIntervalEnd, out interval, out peakValue);
 
                 if (peakValue < minPeakValue)
-                    {
+                {
                     minPeakValue = peakValue;
                     minPeakIndex = index;
                     minOptimalInterval = interval;
-                    }
                 }
-
-            return (double)sampleRate / minOptimalInterval;
             }
+            if (amplitude / amplitudeCount < 0.01 && sampleRate / minOptimalInterval < 150)
+                return 0;
+            return (double)sampleRate / minOptimalInterval;
+        }
 
         private static void ScanSignalIntervals(double[] x, int index, int length,
             int intervalMin, int intervalMax, out int optimalInterval, out double optimalValue)
-            {
+        {
             optimalValue = Double.PositiveInfinity;
             optimalInterval = 0;
 
@@ -89,58 +102,57 @@ namespace NoteGenerator
             // trying all intervals in the range to find one with
             // smaller difference in signal waves
             for (int i = 0; i < steps; i++)
-                {
+            {
                 int interval = intervalMin + (intervalMax - intervalMin) * i / steps;
 
                 double sum = 0;
                 for (int j = 0; j < length; j++)
-                    {
+                {
                     double diff = x[index + j] - x[index + j + interval];
                     sum += diff * diff;
-                    }
+                }
                 if (optimalValue > sum)
-                    {
+                {
                     optimalValue = sum;
                     optimalInterval = interval;
-                    }
                 }
             }
+        }
 
         private static int[] FindPeaks(double[] values, int index, int length, int peaksCount)
-            {
+        {
             double[] peakValues = new double[peaksCount];
             int[] peakIndices = new int[peaksCount];
 
             for (int i = 0; i < peaksCount; i++)
-                {
+            {
                 peakValues[i] = values[peakIndices[i] = i + index];
-                }
+            }
 
             // find min peaked value
             double minStoredPeak = peakValues[0];
             int minIndex = 0;
             for (int i = 1; i < peaksCount; i++)
-                {
+            {
                 if (minStoredPeak > peakValues[i]) minStoredPeak = peakValues[minIndex = i];
-                }
-
+            }
             for (int i = peaksCount; i < length; i++)
-                {
+            {
                 if (minStoredPeak < values[i + index])
-                    {
+                {
                     // replace the min peaked value with bigger one
                     peakValues[minIndex] = values[peakIndices[minIndex] = i + index];
 
                     // and find min peaked value again
                     minStoredPeak = peakValues[minIndex = 0];
                     for (int j = 1; j < peaksCount; j++)
-                        {
+                    {
                         if (minStoredPeak > peakValues[j]) minStoredPeak = peakValues[minIndex = j];
-                        }
                     }
                 }
+            }
 
             return peakIndices;
-            }
         }
     }
+}
