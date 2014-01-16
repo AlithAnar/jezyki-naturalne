@@ -30,10 +30,11 @@ namespace NoteGenerator
 
         public SoundCaptureDevice SelectedDevice
             {
-            get {
-            if (listDevices.SelectedIndex != -1)
-                return devices[listDevices.SelectedIndex];
-            else return null;
+            get
+                {
+                if (listDevices.SelectedIndex != -1)
+                    return devices[listDevices.SelectedIndex];
+                else return null;
                 }
             }
         public Form2()
@@ -71,12 +72,12 @@ namespace NoteGenerator
                 }
             else
                 {
-                    if (e.Frequency != 0)
+                if (e.Frequency != 0)
                     {
-                        freqLabel.Text = "FREQ: " + e.Frequency;            
-                        noteView.AddNote(e.Frequency);
-                        noteView.Refresh();
-                        addDataPoint(e);
+                    freqLabel.Text = "FREQ: " + e.Frequency;
+                    noteView.AddNote(e.Frequency);
+                    noteView.Refresh();
+                    addDataPoint(e);
                     }
                 }
             }
@@ -103,8 +104,6 @@ namespace NoteGenerator
 
             }
 
-       
-
         private void stopListening(object sender, EventArgs e)
             {
             isListening = false;
@@ -113,75 +112,146 @@ namespace NoteGenerator
             }
 
         private void seveButton_Click(object sender, EventArgs e)
-        {
-            try
             {
-                if (saveFileNoteDialog.ShowDialog() == DialogResult.OK)
+            try
                 {
+                if (saveFileNoteDialog.ShowDialog() == DialogResult.OK)
+                    {
                     StringBuilder sb = new StringBuilder();
                     List<double> temp = noteView.hzs;
                     foreach (double item in temp)
-                    {
+                        {
                         sb.Append(item);
                         sb.Append("\t");
-                    }
+                        }
                     StreamWriter sw = new StreamWriter(saveFileNoteDialog.FileName);
                     sw.Write(sb.ToString());
                     sw.Close();
+                    }
+                }
+            catch (Exception ex)
+                {
+                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private void openButton_Click(object sender, EventArgs e)
-        {
-            try
             {
-                if (openFileNoteDialog.ShowDialog() == DialogResult.OK)
+            try
                 {
+                if (openFileNoteDialog.ShowDialog() == DialogResult.OK)
+                    {
                     radioButtonOpen.Enabled = true;
                     radioButtonOpen.Checked = true;
                     String temp = File.ReadAllText(openFileNoteDialog.FileName);
                     int countT = 0;
-                    for(int i=0; i<temp.Count();i++)
-                    {
-                        if (temp.ElementAt(i) == '\t')
+                    for (int i = 0; i < temp.Count(); i++)
                         {
+                        if (temp.ElementAt(i) == '\t')
+                            {
                             countT++;
+                            }
                         }
-                    }
                     String[] temp2 = temp.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (String item in temp2)
-                    {
-                         noteView2.AddNote(Convert.ToDouble(item));
-                    }
+                        {
+                        noteView2.AddNote(Convert.ToDouble(item));
+                        }
                     noteView2.Refresh();
 
                     //File.ReadAllText(openFileNoteDialog.FileName);
+                    }
+                }
+            catch (Exception ex)
+                {
+                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private void radioButtonRecorder_CheckedChanged(object sender, EventArgs e)
-        {
+            {
             noteView.Visible = true;
             noteView2.Visible = false;
-        }
+            }
 
         private void radioButtonOpen_CheckedChanged(object sender, EventArgs e)
-        {
+            {
             noteView.Visible = false;
             noteView2.Visible = true;
+            }
+        private void zakończToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+            Application.Exit();
+            }
+
+        SecondaryBuffer buffer;
+        int bufferLength;
+        private void loadFile(object sender, EventArgs e)
+            {
+            var dev = new Device();
+            dev.SetCooperativeLevel(this, CooperativeLevel.Normal);
+
+
+            using (OpenFileDialog dialog = new OpenFileDialog())
+                {
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                    using (MemoryStream ms = new MemoryStream())
+                        {
+                        byte[] bytes;
+                        using (FileStream fs = new FileStream(dialog.FileName, FileMode.Open, FileAccess.Read))
+                            {
+                            bytes = new byte[fs.Length];
+                            fs.Read(bytes, 0, (int)fs.Length);
+                            ms.Write(bytes, 0, (int)fs.Length);
+                            }
+                        bufferLength = (int)ms.Length;
+                        buffer = new SecondaryBuffer(dialog.FileName, dev);
+                        buffer.Play(0, BufferPlayFlags.Default);
+                        int nextCapturePosition = 0;
+                        while (buffer.Status.Playing)
+                            {
+                            Console.WriteLine("before " + nextCapturePosition);
+                            int capturePosition = buffer.PlayPosition;
+                            int readPosition = buffer.PlayPosition;
+
+
+                            int lockSize = readPosition - nextCapturePosition;
+                            if (lockSize < 0) lockSize += bufferLength;
+                            if ((lockSize & 1) != 0) lockSize--;
+
+                            int itemsCount = lockSize >> 1;
+                            
+                            short[] data = (short[])buffer.Read(nextCapturePosition, typeof(short), LockFlag.None, 1000);
+                            //Console.WriteLine(ProcessData(data));
+                            nextCapturePosition = (nextCapturePosition + lockSize) % bufferLength;
+                            Console.WriteLine("after " + nextCapturePosition);
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+
+        protected double ProcessData(short[] data)
+            {
+            double[] x = new double[data.Length];
+            for (int i = 0; i < x.Length; i++)
+                {
+                x[i] = data[i] / 32768.0;
+                }
+
+            return FrequencyUtils.FindFundamentalFrequency(x, 44100, 60, 1300);
+            }
+
+
+
+
         }
 
-
-
-        }
     }
+
+
+

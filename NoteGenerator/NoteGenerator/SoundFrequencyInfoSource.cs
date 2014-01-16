@@ -15,10 +15,12 @@ namespace NoteGenerator
             this.device = device;
             }
 
+
         public override void Listen()
             {
-            adapter = new Adapter(this, device);
-            adapter.Start();
+          
+                adapter = new Adapter(this, device);
+                adapter.Start();
             }
 
         public override void Stop()
@@ -51,5 +53,7 @@ namespace NoteGenerator
                 owner.OnFrequencyDetected(new FrequencyDetectedEventArgs(freq));
                 }
             }
+
+
         }
     }

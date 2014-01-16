@@ -94,7 +94,7 @@ namespace NoteGenerator
 
             capture = new Capture(device.Id);
             buffer = new CaptureBuffer(desciption, capture);
-
+            
             int waitHandleCount = BufferSeconds * NotifyPointsInSecond;
             BufferPositionNotify[] positions = new BufferPositionNotify[waitHandleCount];
             for (int i = 0; i < waitHandleCount; i++)
@@ -114,6 +114,7 @@ namespace NoteGenerator
             thread.Start();
             }
 
+        
         private void ThreadLoop()
             {
             buffer.Start(true);
