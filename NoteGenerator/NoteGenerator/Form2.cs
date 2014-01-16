@@ -209,23 +209,34 @@ namespace NoteGenerator
                         buffer = new SecondaryBuffer(dialog.FileName, dev);
                         buffer.Play(0, BufferPlayFlags.Default);
                         int nextCapturePosition = 0;
-                        while (buffer.Status.Playing)
+                        int start = 0;
+                        while (start<bufferLength)
                             {
-                            Console.WriteLine("before " + nextCapturePosition);
-                            int capturePosition = buffer.PlayPosition;
-                            int readPosition = buffer.PlayPosition;
+                            int length = bufferLength/(bufferLength / (44100 * 2));
+                           // int capturePosition = buffer.PlayPosition;
+                           // int readPosition = buffer.PlayPosition;
+                           
 
+                            //int lockSize = readPosition - nextCapturePosition;
+                           // if (lockSize < 0) lockSize += length;
+                            //if ((lockSize & 1) != 0) lockSize--;
 
-                            int lockSize = readPosition - nextCapturePosition;
-                            if (lockSize < 0) lockSize += bufferLength;
-                            if ((lockSize & 1) != 0) lockSize--;
-
-                            int itemsCount = lockSize >> 1;
+                           // int itemsCount = lockSize >> 1;
+                             //Console.WriteLine(bufferLength + " | " + start);
                             
-                            short[] data = (short[])buffer.Read(nextCapturePosition, typeof(short), LockFlag.None, 1000);
-                            //Console.WriteLine(ProcessData(data));
-                            nextCapturePosition = (nextCapturePosition + lockSize) % bufferLength;
-                            Console.WriteLine("after " + nextCapturePosition);
+                                short[] data = (short[])buffer.Read(start, typeof(short), LockFlag.None, length);
+                                Console.WriteLine(ProcessData(data));
+                                noteView.AddNote(ProcessData(data));
+                                noteView.Refresh();
+
+
+                             if (!(start + length >= bufferLength-length))
+                                 {
+                                 start += length;
+                                 }
+                             else break;
+                            //nextCapturePosition = (nextCapturePosition + lockSize) % length;
+                            
                             }
 
 

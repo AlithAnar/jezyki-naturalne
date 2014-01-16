@@ -31,7 +31,7 @@ namespace NoteGenerator
                     amplitudeCount++;
                 }
             }
-            Console.Write(amplitude / amplitudeCount);
+            //Console.Write(amplitude / amplitudeCount);
 
             double[] spectr = FftAlgorithm.Calculate(x);
 

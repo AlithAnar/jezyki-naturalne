@@ -132,7 +132,7 @@ namespace NoteGenerator
                     if ((lockSize & 1) != 0) lockSize--;
 
                     int itemsCount = lockSize >> 1;
-
+                    
                     short[] data = (short[])buffer.Read(nextCapturePosition, typeof(short), LockFlag.None, itemsCount);
                     ProcessData(data);
                     nextCapturePosition = (nextCapturePosition + lockSize) % bufferLength;
