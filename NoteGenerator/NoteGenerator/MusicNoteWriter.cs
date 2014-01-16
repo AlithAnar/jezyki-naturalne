@@ -71,7 +71,7 @@ namespace NoteGenerator
 
         public int AddNote(double frequency)
         {
-
+            hzs.Add(frequency);
             for (int i = 0; i < notePositions.Count; i++)
             {
                 if (frequency > notePositions[i].startFrequency && frequency <= notePositions[i].endFrequency)

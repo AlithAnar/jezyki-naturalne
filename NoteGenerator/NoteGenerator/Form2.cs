@@ -112,6 +112,75 @@ namespace NoteGenerator
             frequencyInfoSource = null;
             }
 
+        private void seveButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (saveFileNoteDialog.ShowDialog() == DialogResult.OK)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    List<double> temp = noteView.hzs;
+                    foreach (double item in temp)
+                    {
+                        sb.Append(item);
+                        sb.Append("\t");
+                    }
+                    StreamWriter sw = new StreamWriter(saveFileNoteDialog.FileName);
+                    sw.Write(sb.ToString());
+                    sw.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (openFileNoteDialog.ShowDialog() == DialogResult.OK)
+                {
+                    radioButtonOpen.Enabled = true;
+                    radioButtonOpen.Checked = true;
+                    String temp = File.ReadAllText(openFileNoteDialog.FileName);
+                    int countT = 0;
+                    for(int i=0; i<temp.Count();i++)
+                    {
+                        if (temp.ElementAt(i) == '\t')
+                        {
+                            countT++;
+                        }
+                    }
+                    String[] temp2 = temp.Split(new string[] { "\t" }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (String item in temp2)
+                    {
+                         noteView2.AddNote(Convert.ToDouble(item));
+                    }
+                    noteView2.Refresh();
+
+                    //File.ReadAllText(openFileNoteDialog.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Form2", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void radioButtonRecorder_CheckedChanged(object sender, EventArgs e)
+        {
+            noteView.Visible = true;
+            noteView2.Visible = false;
+        }
+
+        private void radioButtonOpen_CheckedChanged(object sender, EventArgs e)
+        {
+            noteView.Visible = false;
+            noteView2.Visible = true;
+        }
+
 
 
         }
