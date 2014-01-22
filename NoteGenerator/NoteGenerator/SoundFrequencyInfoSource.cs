@@ -48,7 +48,7 @@ namespace NoteGenerator
                     {
                     x[i] = data[i] / 32768.0;
                     }
-
+                owner.OnDataChunkDetected(new DataChunkDetectedEventArgs(data));
                 double freq = FrequencyUtils.FindFundamentalFrequency(x, SampleRate, MinFreq, MaxFreq);
                 owner.OnFrequencyDetected(new FrequencyDetectedEventArgs(freq));
                 }

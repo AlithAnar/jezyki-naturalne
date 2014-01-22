@@ -55,6 +55,7 @@ namespace NoteGenerator
 
         private void recordStream(object sender, EventArgs e)
             {
+            if (listDevices.SelectedIndex == -1) MessageBox.Show("Wybierz urządzenie nasłuchujące");
             SoundCaptureDevice device = null;
             device = SelectedDevice;
 
@@ -97,11 +98,34 @@ namespace NoteGenerator
 
         private void listen(SoundCaptureDevice device)
             {
+            chart2.Series.Add("wave");
+            chart2.Series["wave"].ChartType = SeriesChartType.FastLine;
+            chart2.Series["wave"].ChartArea = "ChartArea1";
             isListening = true;
             frequencyInfoSource = new SoundFrequencyInfoSource(device);
             frequencyInfoSource.FrequencyDetected += new EventHandler<FrequencyDetectedEventArgs>(frequencyInfoSource_FrequencyDetected);
+            frequencyInfoSource.DataChunkDetected += new EventHandler<DataChunkDetectedEventArgs>(frequencyInfoSource_DataChunkDetected);
             frequencyInfoSource.Listen();
 
+            }
+
+        private void frequencyInfoSource_DataChunkDetected(object sender, DataChunkDetectedEventArgs e)
+            {
+            if (InvokeRequired)
+                {
+                BeginInvoke(new EventHandler<DataChunkDetectedEventArgs>(frequencyInfoSource_DataChunkDetected), sender, e);
+                }
+            else
+                {
+                if (e.Data != null)
+                    {
+                    for (int i = 0; i < e.Data.Length / 4; i++)
+                        {
+                        chart2.Series["wave"].Points.Add(e.Data[i * 4]);
+                        }
+                    }
+                }
+            
             }
 
         private void stopListening(object sender, EventArgs e)
@@ -206,39 +230,66 @@ namespace NoteGenerator
                             ms.Write(bytes, 0, (int)fs.Length);
                             }
                         bufferLength = (int)ms.Length;
+
+                        chart2.Series.Add("wave");
+                        chart2.Series["wave"].ChartType = SeriesChartType.FastLine;
+                        chart2.Series["wave"].ChartArea = "ChartArea1";
+
+                        byte[] buff = new byte[16000];
+                        int read=0;
+                        
+                        NAudio.Wave.WaveChannel32 wave = new NAudio.Wave.WaveChannel32(new NAudio.Wave.WaveFileReader(dialog.FileName));
+                        while (wave.Position < wave.Length)
+                            {
+                            read = wave.Read(buff, 0, 16000);
+                            for (int i = 0; i < read / 4; i++)
+                                {
+                                chart2.Series["wave"].Points.Add(BitConverter.ToSingle(buff, i * 4));
+                                }
+                            }
+
+
+                        WaveFormat waveFormat = new WaveFormat();
+                        waveFormat.FormatTag = WaveFormatTag.Pcm;
+                        waveFormat.Channels = 1;
+                        waveFormat.BitsPerSample = 16;
+                        waveFormat.SamplesPerSecond = 44100;
+                        waveFormat.BlockAlign = (short)(waveFormat.Channels * waveFormat.BitsPerSample / 8);
+                        waveFormat.AverageBytesPerSecond = waveFormat.BlockAlign * waveFormat.SamplesPerSecond;
+
+                        BufferDescription bufferDesc = new BufferDescription(waveFormat);
+                        bufferDesc.Control3D = false;
+                        bufferDesc.ControlEffects = false;
+                        bufferDesc.ControlFrequency = true;
+                        bufferDesc.ControlPan = true;
+                        bufferDesc.ControlVolume = true;
+                        bufferDesc.DeferLocation = true;
+                        bufferDesc.GlobalFocus = true;
+
+                        noteView.Clear();
                         buffer = new SecondaryBuffer(dialog.FileName, dev);
                         buffer.Play(0, BufferPlayFlags.Default);
                         int nextCapturePosition = 0;
                         int start = 0;
-                        while (start<bufferLength)
+                        while (start < bufferLength)
                             {
-                            int length = bufferLength/(bufferLength / (44100 * 2));
-                           // int capturePosition = buffer.PlayPosition;
-                           // int readPosition = buffer.PlayPosition;
-                           
+                            int length = bufferLength / (bufferLength / (44100 * 2));
+                            length = length / 2;
 
-                            //int lockSize = readPosition - nextCapturePosition;
-                           // if (lockSize < 0) lockSize += length;
-                            //if ((lockSize & 1) != 0) lockSize--;
-
-                           // int itemsCount = lockSize >> 1;
-                             //Console.WriteLine(bufferLength + " | " + start);
-                            
-                                short[] data = (short[])buffer.Read(start, typeof(short), LockFlag.None, length);
-                                Console.WriteLine(ProcessData(data));
-                                noteView.AddNote(ProcessData(data));
-                                noteView.Refresh();
-
-
-                             if (!(start + length >= bufferLength-length))
-                                 {
-                                 start += length;
-                                 }
-                             else break;
-                            //nextCapturePosition = (nextCapturePosition + lockSize) % length;
-                            
+                            short[] data = (short[])buffer.Read(start, typeof(short), LockFlag.None, length);
+                            double freq = ProcessData(data);
+                            Console.WriteLine(freq);
+                            noteView.AddNote(freq);
+                            noteView.Refresh();
+                            chart1.Series["Frequency"].Points.Add(freq);
+                            if (!(start + length >= bufferLength - length))
+                                {
+                                start += length;
+                                }
+                            else break;
+                            //if (!buffer.Status.Playing) break;
                             }
-
+                        
 
                         }
                     }

@@ -41,13 +41,14 @@
             this.openFileNoteDialog = new System.Windows.Forms.OpenFileDialog();
             this.radioButtonRecorder = new System.Windows.Forms.RadioButton();
             this.radioButtonOpen = new System.Windows.Forms.RadioButton();
-            this.noteView2 = new NoteGenerator.MusicNoteWriter();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.wczytajToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zakończToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.noteView2 = new NoteGenerator.MusicNoteWriter();
             this.noteView = new NoteGenerator.MusicNoteWriter();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
@@ -55,21 +56,21 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(287, 99);
+            this.button1.Location = new System.Drawing.Point(277, 45);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(89, 37);
             this.button1.TabIndex = 0;
-            this.button1.Text = "listen";
+            this.button1.Text = "Słuchaj";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.recordStream);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(287, 70);
+            this.button2.Location = new System.Drawing.Point(277, 88);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.Size = new System.Drawing.Size(89, 50);
             this.button2.TabIndex = 1;
-            this.button2.Text = "stop";
+            this.button2.Text = "Zatrzymaj nasłuchiwanie";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.stopListening);
             // 
@@ -84,11 +85,11 @@
             // freqLabel
             // 
             this.freqLabel.AutoSize = true;
-            this.freqLabel.Location = new System.Drawing.Point(284, 14);
+            this.freqLabel.Location = new System.Drawing.Point(12, 203);
             this.freqLabel.Name = "freqLabel";
-            this.freqLabel.Size = new System.Drawing.Size(42, 13);
+            this.freqLabel.Size = new System.Drawing.Size(76, 13);
             this.freqLabel.TabIndex = 3;
-            this.freqLabel.Text = "FREQ: ";
+            this.freqLabel.Text = "Częstotliwości:";
             // 
             // chart1
             // 
@@ -102,7 +103,7 @@
             // 
             // seveButton
             // 
-            this.seveButton.Location = new System.Drawing.Point(397, 70);
+            this.seveButton.Location = new System.Drawing.Point(418, 34);
             this.seveButton.Name = "seveButton";
             this.seveButton.Size = new System.Drawing.Size(75, 23);
             this.seveButton.TabIndex = 6;
@@ -112,7 +113,7 @@
             // 
             // openButton
             // 
-            this.openButton.Location = new System.Drawing.Point(397, 99);
+            this.openButton.Location = new System.Drawing.Point(418, 63);
             this.openButton.Name = "openButton";
             this.openButton.Size = new System.Drawing.Size(75, 23);
             this.openButton.TabIndex = 7;
@@ -130,10 +131,10 @@
             this.radioButtonRecorder.Checked = true;
             this.radioButtonRecorder.Location = new System.Drawing.Point(511, 34);
             this.radioButtonRecorder.Name = "radioButtonRecorder";
-            this.radioButtonRecorder.Size = new System.Drawing.Size(95, 17);
+            this.radioButtonRecorder.Size = new System.Drawing.Size(103, 17);
             this.radioButtonRecorder.TabIndex = 8;
             this.radioButtonRecorder.TabStop = true;
-            this.radioButtonRecorder.Text = "Recorder Note";
+            this.radioButtonRecorder.Text = "Nuty z nasłuchu";
             this.radioButtonRecorder.UseVisualStyleBackColor = true;
             this.radioButtonRecorder.CheckedChanged += new System.EventHandler(this.radioButtonRecorder_CheckedChanged);
             // 
@@ -143,19 +144,11 @@
             this.radioButtonOpen.Enabled = false;
             this.radioButtonOpen.Location = new System.Drawing.Point(648, 34);
             this.radioButtonOpen.Name = "radioButtonOpen";
-            this.radioButtonOpen.Size = new System.Drawing.Size(77, 17);
+            this.radioButtonOpen.Size = new System.Drawing.Size(99, 17);
             this.radioButtonOpen.TabIndex = 9;
-            this.radioButtonOpen.Text = "Open Note";
+            this.radioButtonOpen.Text = "Wczytane nuty:";
             this.radioButtonOpen.UseVisualStyleBackColor = true;
             this.radioButtonOpen.CheckedChanged += new System.EventHandler(this.radioButtonOpen_CheckedChanged);
-            // 
-            // noteView2
-            // 
-            this.noteView2.Location = new System.Drawing.Point(511, 57);
-            this.noteView2.Name = "noteView2";
-            this.noteView2.Size = new System.Drawing.Size(738, 152);
-            this.noteView2.TabIndex = 10;
-            this.noteView2.Visible = false;
             // 
             // menuStrip1
             // 
@@ -194,11 +187,19 @@
             // 
             chartArea2.Name = "ChartArea1";
             this.chart2.ChartAreas.Add(chartArea2);
-            this.chart2.Location = new System.Drawing.Point(12, 361);
+            this.chart2.Location = new System.Drawing.Point(12, 374);
             this.chart2.Name = "chart2";
-            this.chart2.Size = new System.Drawing.Size(481, 131);
+            this.chart2.Size = new System.Drawing.Size(481, 118);
             this.chart2.TabIndex = 7;
             this.chart2.Text = "chart2";
+            // 
+            // noteView2
+            // 
+            this.noteView2.Location = new System.Drawing.Point(511, 57);
+            this.noteView2.Name = "noteView2";
+            this.noteView2.Size = new System.Drawing.Size(738, 152);
+            this.noteView2.TabIndex = 10;
+            this.noteView2.Visible = false;
             // 
             // noteView
             // 
@@ -207,12 +208,22 @@
             this.noteView.Size = new System.Drawing.Size(738, 152);
             this.noteView.TabIndex = 5;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 357);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(98, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Wizualizacja Wave";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1271, 522);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.noteView2);
             this.Controls.Add(this.radioButtonOpen);
             this.Controls.Add(this.radioButtonRecorder);
@@ -260,6 +271,7 @@
         private System.Windows.Forms.ToolStripMenuItem wczytajToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zakończToolStripMenuItem;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.Label label1;
 
         }
     }

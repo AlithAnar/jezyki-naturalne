@@ -11,12 +11,22 @@ namespace NoteGenerator
         public abstract void Stop();
 
         public event EventHandler<FrequencyDetectedEventArgs> FrequencyDetected;
+        public event EventHandler<DataChunkDetectedEventArgs> DataChunkDetected;
+
 
         protected void OnFrequencyDetected(FrequencyDetectedEventArgs e)
             {
             if (FrequencyDetected != null)
                 {
                 FrequencyDetected(this, e);
+                }
+            }
+
+        protected void OnDataChunkDetected(DataChunkDetectedEventArgs e)
+            {
+            if (DataChunkDetected != null)
+                {
+                DataChunkDetected(this, e);
                 }
             }
         }
@@ -33,6 +43,21 @@ namespace NoteGenerator
         public FrequencyDetectedEventArgs(double frequency)
             {
             this.frequency = frequency;
+            }
+        }
+
+    public class DataChunkDetectedEventArgs : EventArgs
+        {
+        short[] data;
+
+        public short[] Data
+            {
+            get { return data; }
+            }
+
+        public DataChunkDetectedEventArgs(short[] data)
+            {
+            this.data = data;
             }
         }
     }

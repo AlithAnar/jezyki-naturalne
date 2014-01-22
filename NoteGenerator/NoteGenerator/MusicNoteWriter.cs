@@ -82,6 +82,10 @@ namespace NoteGenerator
             return -1;
         }
 
+        public void Clear()
+            {
+            notes.Clear();
+            }
         protected override void OnPaint(PaintEventArgs pe)
         {
             Image G_clef = Properties.Resources.G_clef;
