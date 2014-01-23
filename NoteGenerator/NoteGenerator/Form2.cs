@@ -308,6 +308,41 @@ namespace NoteGenerator
             return FrequencyUtils.FindFundamentalFrequency(x, 44100, 60, 1300);
             }
 
+        private void compare_Click(object sender, EventArgs e)
+        {
+            int len = 0, equal = 0;
+            string message = "Nagranie ";
+            if (radioButtonOpen.Enabled == true)
+            {
+                if (noteView.hzs.Count > noteView2.hzs.Count)
+                {
+                    len = noteView2.hzs.Count;
+                    message += "z pliku jest mniejsze niż nagranie z mikrofonu. ";
+                }
+                else if (noteView.hzs.Count < noteView2.hzs.Count)
+                {
+                    len = noteView.hzs.Count;
+                    message += "z mikrofonu jest mniejsze niż nagranie z pliku. ";
+                }
+                else
+                {
+                    len = noteView.hzs.Count;
+                    message = "";
+                }
+                for (int i = 0; i < len; i++)
+                {
+                    if (noteView.CompareNote(noteView.hzs[i], noteView2.hzs[i]))
+                    {
+                        equal++;
+                    }
+                }
+                message += "Po porównaniu dwóch nagrań wynik jest następujący:\nNagrania są podobne w  " + (equal * 100 / len) + "%";
+                MessageBox.Show(message, "Wynik porównania");
+            }
+            else
+                MessageBox.Show("Nagranie z pliku nie jest wczytane!", "Wynik porównania");
+        }
+
 
 
 

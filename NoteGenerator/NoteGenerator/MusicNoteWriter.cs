@@ -82,6 +82,23 @@ namespace NoteGenerator
             return -1;
         }
 
+        public bool CompareNote(double frequency1, double frequency2)
+        {
+            for (int i = 0; i < notePositions.Count; i++)
+            {
+                if (frequency1 > notePositions[i].startFrequency && frequency1 <= notePositions[i].endFrequency)
+                {
+                    if (frequency2 > notePositions[i].startFrequency && frequency2 <= notePositions[i].endFrequency)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            if ((int)frequency1 == (int)frequency2)
+                return true;
+            return false;
+        }
+
         public void Clear()
             {
             notes.Clear();

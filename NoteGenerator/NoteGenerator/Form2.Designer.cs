@@ -49,6 +49,7 @@
             this.noteView2 = new NoteGenerator.MusicNoteWriter();
             this.noteView = new NoteGenerator.MusicNoteWriter();
             this.label1 = new System.Windows.Forms.Label();
+            this.compare = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
@@ -217,12 +218,23 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Wizualizacja Wave";
             // 
+            // compare
+            // 
+            this.compare.Location = new System.Drawing.Point(418, 115);
+            this.compare.Name = "compare";
+            this.compare.Size = new System.Drawing.Size(75, 23);
+            this.compare.TabIndex = 12;
+            this.compare.Text = "Porównaj";
+            this.compare.UseVisualStyleBackColor = true;
+            this.compare.Click += new System.EventHandler(this.compare_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1271, 522);
+            this.Controls.Add(this.compare);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.noteView2);
             this.Controls.Add(this.radioButtonOpen);
@@ -272,6 +284,7 @@
         private System.Windows.Forms.ToolStripMenuItem zakończToolStripMenuItem;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button compare;
 
         }
     }
